@@ -12,4 +12,6 @@ const modelId = process.env.NEXOROUTER_MODEL ?? "kimi-k2.6";
 export default defineAgent({
   model: nexorouter.chatModel(modelId),
   modelContextWindowTokens: 128_000,
+  // Menos pensamiento interno: respuestas de aula más concretas y menos tokens.
+  reasoning: "low",
 });

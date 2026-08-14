@@ -19,3 +19,4 @@ $$
 - Si una tool devolvió `latex`, cópialo dentro de `$$ ... $$`.
 - Prefiere `\bar{x}`, `\mathrm{Me}`, `\mid`, `\operatorname{Var}`, `\sim`. Evita unicode suelto (x̄) cuando exista comando LaTeX.
 - Cierra el desarrollo con el resultado en un bloque `$$ ... $$`.
+- No dupliques la misma ecuación en `$...$` y en `$$...$$`. Una vez en la pizarra alcanza.
