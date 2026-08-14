@@ -14,13 +14,11 @@ const classroomAuth: AuthFn<Request> = async (request) => {
     return null;
   }
 
-  if (user.role !== "teacher") {
-    const aula = getAulaState();
-    if (!aula.isOpen) {
-      throw new ForbiddenError({
-        message: closedAulaMessage(aula),
-      });
-    }
+  const aula = getAulaState();
+  if (!aula.isOpen) {
+    throw new ForbiddenError({
+      message: closedAulaMessage(aula),
+    });
   }
 
   return {

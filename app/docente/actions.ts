@@ -1,6 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import { redirect } from "next/navigation";
 import { auth } from "@/auth";
 import { setAulaNotice, setAulaOpen } from "@/agent/lib/aula";
 
@@ -18,6 +19,9 @@ export async function toggleAula(isOpen: boolean): Promise<void> {
   setAulaOpen(isOpen, email);
   revalidatePath("/");
   revalidatePath("/docente");
+  if (!isOpen) {
+    redirect("/");
+  }
 }
 
 export async function saveAulaNotice(formData: FormData): Promise<void> {

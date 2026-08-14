@@ -44,8 +44,8 @@ export default async function DocentePage() {
           <p className="text-muted-foreground text-sm tracking-wide">Panel docente</p>
           <h1 className="font-serif text-3xl font-medium tracking-tight">Habilitar el aula</h1>
           <p className="text-muted-foreground text-sm">
-            Abra el agente durante el periodo de clase. Mientras esté cerrado, los estudiantes
-            podrán iniciar sesión pero no chatear.
+            Abra el agente durante el periodo de clase. Al cerrar el aula, el chat se detiene
+            para todos, incluido usted. Los estudiantes verán el aviso.
           </p>
         </div>
 

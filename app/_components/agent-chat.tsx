@@ -4,7 +4,7 @@ import type { UserContent } from "ai";
 import { Client, type MessageStreamEvent } from "eve/client";
 import { useEveAgent } from "eve/react";
 import { AlertCircleIcon } from "lucide-react";
-import { useCallback, useRef, useState, type ReactNode } from "react";
+import { useCallback, useEffect, useRef, useState, type ReactNode } from "react";
 import {
   Conversation,
   ConversationContent,
@@ -36,6 +36,7 @@ export function AgentChat({ children }: { children?: ReactNode }) {
   const cancellationRef = useRef<Cancellation>({ requested: false });
   const [cancellationError, setCancellationError] = useState<string>();
   const [cancellationState, setCancellationState] = useState<CancellationState>("idle");
+  const [closedNotice, setClosedNotice] = useState<string | null>(null);
 
   const cancelTurn = useCallback(
     (turnId: string) => {
@@ -99,7 +100,7 @@ export function AgentChat({ children }: { children?: ReactNode }) {
     setCancellationState("idle");
   };
 
-  const requestCancellation = () => {
+  const requestCancellation = useCallback(() => {
     if (!isBusy || cancellationState !== "idle") {
       return;
     }
@@ -112,11 +113,63 @@ export function AgentChat({ children }: { children?: ReactNode }) {
     if (cancellation.turnId !== undefined) {
       cancelTurn(cancellation.turnId);
     }
-  };
+  }, [cancelTurn, cancellationState, isBusy]);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    const checkAula = async () => {
+      try {
+        const response = await fetch("/api/aula", { cache: "no-store" });
+        if (!response.ok || cancelled) {
+          return;
+        }
+        const data = (await response.json()) as { isOpen?: boolean; notice?: string };
+        if (cancelled) {
+          return;
+        }
+        if (data.isOpen === false) {
+          setClosedNotice(data.notice?.trim() || "El aula está cerrada.");
+        } else {
+          setClosedNotice(null);
+        }
+      } catch {
+        // Keep the last known classroom state if the probe fails.
+      }
+    };
+
+    void checkAula();
+    const timer = window.setInterval(() => {
+      void checkAula();
+    }, 3000);
+    return () => {
+      cancelled = true;
+      window.clearInterval(timer);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (closedNotice === null || !isBusy) {
+      return;
+    }
+    requestCancellation();
+    agent.stop();
+  }, [agent, closedNotice, isBusy, requestCancellation]);
 
   const handleSubmit = async (message: PromptInputMessage) => {
     const text = message.text.trim();
-    if ((text.length === 0 && message.files.length === 0) || isBusy) return;
+    if ((text.length === 0 && message.files.length === 0) || isBusy || closedNotice !== null) {
+      return;
+    }
+
+    const probe = await fetch("/api/aula", { cache: "no-store" });
+    if (probe.ok) {
+      const data = (await probe.json()) as { isOpen?: boolean; notice?: string };
+      if (data.isOpen === false) {
+        setClosedNotice(data.notice?.trim() || "El aula está cerrada.");
+        return;
+      }
+    }
 
     prepareTurn();
 
@@ -177,7 +230,7 @@ export function AgentChat({ children }: { children?: ReactNode }) {
           <ConversationContent className="mx-auto w-full max-w-3xl gap-6 px-4 py-6 sm:px-6">
             {agent.data.messages.map((message, index) => (
               <AgentMessage
-                canRespond={!isBusy}
+                canRespond={!isBusy && closedNotice === null}
                 isStreaming={
                   agent.status === "streaming" && index === agent.data.messages.length - 1
                 }
@@ -215,7 +268,14 @@ export function AgentChat({ children }: { children?: ReactNode }) {
             </p>
           </div>
         ) : null}
-        <div className="w-full">{composer}</div>
+        {closedNotice ? (
+          <div className="flex flex-col items-center gap-3 text-center">
+            <p className="font-medium">El aula está cerrada</p>
+            <p className="max-w-md text-muted-foreground text-sm">{closedNotice}</p>
+          </div>
+        ) : (
+          <div className="w-full">{composer}</div>
+        )}
       </div>
     </main>
   );

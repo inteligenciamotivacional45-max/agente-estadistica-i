@@ -40,7 +40,7 @@ export default async function Page({
   }
   const aula = getAulaState();
 
-  if (user.role !== "teacher" && !aula.isOpen) {
+  if (!aula.isOpen) {
     return <AulaCerrada notice={closedAulaMessage(aula)} user={user} />;
   }
 

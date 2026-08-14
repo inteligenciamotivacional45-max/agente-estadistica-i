@@ -103,6 +103,7 @@ export function setAulaOpen(isOpen: boolean, updatedBy: string): AulaState {
   getDatabase()
     .prepare("UPDATE aula_state SET is_open = ?, updated_at = ?, updated_by = ? WHERE id = 1")
     .run(isOpen ? 1 : 0, new Date().toISOString(), normalizeEmail(updatedBy));
+  getDatabase().exec("PRAGMA wal_checkpoint(PASSIVE);");
   return getAulaState();
 }
 
