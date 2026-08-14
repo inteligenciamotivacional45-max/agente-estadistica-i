@@ -33,6 +33,8 @@
   },
   "include": [
     "next-env.d.ts",
+    "auth.ts",
+    "types/**/*.ts",
     "app/**/*.ts",
     "app/**/*.tsx",
     "components/**/*.ts",
@@ -44,6 +46,7 @@
     ".next/dev/types/**/*.ts"
   ],
   "exclude": [
-    "node_modules"
+    "node_modules",
+    "**/*.test.ts"
   ]
 }

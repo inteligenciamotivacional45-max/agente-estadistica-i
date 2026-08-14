@@ -12,7 +12,8 @@
     "dev": "node --dns-result-order=ipv4first ./node_modules/next/dist/bin/next dev",
     "dev:tui": "node --dns-result-order=ipv4first ./node_modules/eve/bin/eve.js dev",
     "start": "next start",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "test": "node --experimental-strip-types --test agent/lib/umss.test.ts"
   },
   "dependencies": {
     "@ai-sdk/openai-compatible": "^3.0.30",
@@ -36,6 +37,7 @@
     "motion": "^12.40.0",
     "nanoid": "^5.1.11",
     "next": "^16.3.0-preview.6",
+    "next-auth": "^5.0.0-beta.32",
     "radix-ui": "^1.4.3",
     "react": "^19.2.6",
     "react-dom": "^19.2.6",

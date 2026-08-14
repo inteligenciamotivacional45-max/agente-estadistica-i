@@ -4,7 +4,7 @@ import type { UserContent } from "ai";
 import { Client, type MessageStreamEvent } from "eve/client";
 import { useEveAgent } from "eve/react";
 import { AlertCircleIcon } from "lucide-react";
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useRef, useState, type ReactNode } from "react";
 import {
   Conversation,
   ConversationContent,
@@ -30,7 +30,7 @@ type Cancellation = {
   turnId?: string;
 };
 
-export function AgentChat() {
+export function AgentChat({ children }: { children?: ReactNode }) {
   const [client] = useState(() => new Client({ host: "" }));
   const sessionIdRef = useRef<string | undefined>(undefined);
   const cancellationRef = useRef<Cancellation>({ requested: false });
@@ -150,6 +150,7 @@ export function AgentChat() {
 
   return (
     <main className="flex h-dvh flex-col overflow-hidden bg-background text-foreground">
+      {children}
       {isEmpty ? null : (
         <header className="flex h-14 shrink-0 items-center justify-center gap-3 pl-4 pr-2">
           <span className="flex min-w-0 items-center gap-2">
