@@ -19,9 +19,9 @@ Las respuestas van **concretas** (planteo → fórmula → resultado → una int
 | Aula (producción) | **https://agente-estadistica-i.srv1825081.hstgr.cloud** |
 | Panel docente | **https://agente-estadistica-i.srv1825081.hstgr.cloud/docente** |
 | Salud Eve | `https://agente-estadistica-i.srv1825081.hstgr.cloud/eve/v1/health` → `{"ok":true,"status":"ready"}` |
-| Código GitHub | https://github.com/inteligenciamotivacional45-max/agente-estadistica-i |
-| Rama **en el VPS y en el PR** | `cursor/aula-umss-google-c1ee` (aún **no** está en `main`) |
-| Pull request | https://github.com/inteligenciamotivacional45-max/agente-estadistica-i/pull/1 |
+| Código GitHub | https://github.com/inteligenciamotivacional45-max/agente-estadistica-i (`main`) |
+| Rama de trabajo / PR | `cursor/aula-umss-google-c1ee` · https://github.com/inteligenciamotivacional45-max/agente-estadistica-i/pull/1 |
+| VPS (checkout) | Misma línea que `main` tras el merge; carpeta `/docker/agente-estadistica-i` |
 | VPS Hostinger KVM 2 | `179.197.70.116` · Ubuntu 24.04 · hostname `srv1825081` |
 | App en el VPS | `/docker/agente-estadistica-i` (Docker + Traefik) |
 | `.env` del VPS | `/docker/agente-estadistica-i/.env` (no está en Git) |
@@ -29,7 +29,7 @@ Las respuestas van **concretas** (planteo → fórmula → resultado → una int
 
 Otras apps en el **mismo VPS** (no tocar sin pedir): n8n, AgendaPro, Quipu, convertir-md, Traefik, Hermes. Traefik en host mode, Let’s Encrypt, patrón `{app}.srv1825081.hstgr.cloud`.
 
-**Cuidado:** el VPS está en la rama del PR, no en `main`. Un `git checkout main` en el servidor **vuelve al chat público sin login**.
+**Cuidado:** no vuelva a poner `none()` en el canal Eve. El chat público sin login era el estado anterior de `main`.
 
 ## Qué quedó hecho (ago 2026)
 
@@ -69,8 +69,8 @@ Aula **cerrada por defecto** hasta que el docente la abra.
 ```bash
 cd /docker/agente-estadistica-i
 git fetch origin
-git checkout cursor/aula-umss-google-c1ee
-git pull origin cursor/aula-umss-google-c1ee
+git checkout main
+git pull origin main
 docker compose up --build -d
 ```
 
@@ -88,21 +88,19 @@ Variables en `.env` del VPS (nombres; **valores nunca a Git**): `NEXOROUTER_API_
 
 ## Problemas conocidos
 
-1. El PR **no está fusionado a `main`**. Producción corre la rama del PR.
-2. Google Client Secret se pegó en el chat de Cursor: **rotar** en Cloud Console y actualizar el `.env` del VPS.
-3. App OAuth probablemente sigue en **Testing**: el curso no entra hasta publicarla o agregar test users.
-4. Pensamiento del modelo a veces sigue a la vista; se bajó a `reasoning: "low"`, no se ocultó del todo en la UI.
-5. Keys de NexoRouter/Kimi también estuvieron en historial de chat: conviene rotarlas.
-6. Windows local: `fetch failed` / IPv6; `dev` usa `--dns-result-order=ipv4first`.
-7. Node del VPS es 20; la app pide **24.x** → Docker `node:24`.
-8. Deploy manual. No hay CI.
-9. Sin dominio propio (`*.hstgr.cloud`) ni backups explícitos del volumen `eve_workflow`.
+1. El Client Secret de Google se pegó en el chat de Cursor: **rotar** en Cloud Console y actualizar el `.env` del VPS.
+2. App OAuth probablemente sigue en **Testing**: el curso no entra hasta publicarla o agregar test users.
+3. Pensamiento del modelo a veces sigue a la vista; se bajó a `reasoning: "low"`, no se ocultó del todo en la UI.
+4. Keys de NexoRouter/Kimi también estuvieron en historial de chat: conviene rotarlas.
+5. Windows local: `fetch failed` / IPv6; `dev` usa `--dns-result-order=ipv4first`.
+6. Node del VPS es 20; la app pide **24.x** → Docker `node:24`.
+7. Deploy manual. No hay CI.
+8. Sin dominio propio (`*.hstgr.cloud`) ni backups explícitos del volumen `eve_workflow`.
 
 ## Qué mejorar al volver
 
 ### Alto
 
-- Fusionar el PR a `main` (o dejar documentado que el VPS sigue la rama del PR).
 - Publicar la app OAuth para todo el curso.
 - Rotar `GOOGLE_CLIENT_SECRET` y `NEXOROUTER_API_KEY`.
 - Ocultar/colapsar el bloque de pensamiento en la UI.
@@ -122,18 +120,17 @@ Variables en `.env` del VPS (nombres; **valores nunca a Git**): `NEXOROUTER_API_
 
 ## Cómo retomar (checklist)
 
-1. Abrir este archivo y el PR #1.
+1. Abrir `ESTADO.md` y el repo en `main`.
 2. Producción: recargar el aula; salud Eve; entrar con Google; `/docente` abrir/cerrar.
 3. Pregunta de humo (aula abierta): media de 2, 4, 6 y 8 → \(\bar{x}=5\) en KaTeX, respuesta corta.
 4. Local: `cp .env.example .env.local` (keys + Google + `TEACHER_EMAILS`) → `npm install` → `npm run dev`.
 5. Dominios UMSS: `npm test`.
-6. Cambios al agente: editar `agent/`, luego en el VPS `git pull` de la rama y `docker compose up --build -d`.
+6. Cambios al agente: editar `agent/`, commit a `main`, en el VPS `git pull origin main` y `docker compose up --build -d`.
 
 ## Qué no hacer
 
 - No commitear `.env` / `.env.local`.
 - No volver a poner `none()` en `agent/channels/eve.ts`.
-- No hacer `checkout main` en el VPS hasta fusionar el PR.
 - No borrar n8n, Traefik u otras apps del VPS.
 - No montar el volumen sobre `/app/.eve` entero.
 - No reintentar SMS de Vercel en bucle.

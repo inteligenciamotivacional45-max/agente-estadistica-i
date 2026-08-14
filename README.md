@@ -58,9 +58,9 @@ No subas `.env` ni `.env.local` a GitHub.
 ```bash
 cd /docker/agente-estadistica-i
 git fetch origin
-git checkout cursor/aula-umss-google-c1ee
-git pull origin cursor/aula-umss-google-c1ee
+git checkout main
+git pull origin main
 docker compose up --build -d
 ```
 
-El VPS corre esa rama (el PR aún no está en `main`). El volumen Docker `eve_workflow` guarda el estado del aula y los estudiantes junto a los datos de Eve.
+El volumen Docker `eve_workflow` guarda el estado del aula y los estudiantes junto a los datos de Eve.
