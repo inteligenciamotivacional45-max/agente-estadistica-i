@@ -1,0 +1,73 @@
+% Fórmulas ancla — Probabilidad y Estadística
+% Docente Mgr Alfredo Delgadillo Cossio
+% Fragmento compilable. Requiere amsmath.
+\documentclass{article}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[spanish]{babel}
+\usepackage{amsmath,amssymb}
+\title{Fórmulas ancla --- Probabilidad y Estadística}
+\author{Docente Mgr Alfredo Delgadillo Cossio}
+\date{}
+\begin{document}
+\maketitle
+
+\section{Unidad 1}
+\[
+f_i = \frac{n_i}{n},\qquad
+x_i^* = \frac{L_i+U_i}{2},\qquad
+k \approx 1 + 3.322\log_{10} n
+\]
+
+\section{Unidad 2}
+\begin{align*}
+\bar{x} &= \frac{1}{n}\sum_{i=1}^n x_i, &
+G &= \exp\Bigl(\frac{1}{n}\sum \ln x_i\Bigr), &
+H &= \frac{n}{\sum (1/x_i)} \\
+s^2 &= \frac{1}{n-1}\sum (x_i-\bar{x})^2, &
+\mathrm{CV} &= \frac{s}{\bar{x}}, &
+z_i &= \frac{x_i-\bar{x}}{s}
+\end{align*}
+
+\section{Unidad 3}
+\[
+\hat{y}=a+bx,\quad
+b=\frac{\sum(x_i-\bar{x})(y_i-\bar{y})}{\sum(x_i-\bar{x})^2},\quad
+r=\frac{\sum(x_i-\bar{x})(y_i-\bar{y})}{\sqrt{\sum(x_i-\bar{x})^2\sum(y_i-\bar{y})^2}}
+\]
+
+\section{Unidad 4}
+\[
+P(A\mid B)=\frac{P(A\cap B)}{P(B)},\qquad
+P(A_i\mid B)=\frac{P(B\mid A_i)P(A_i)}{\sum_j P(B\mid A_j)P(A_j)}
+\]
+\[
+P(n,k)=\frac{n!}{(n-k)!},\qquad
+\binom{n}{k}=\frac{n!}{k!(n-k)!}
+\]
+
+\section{Unidad 5}
+\[
+P(X=k)=\binom{n}{k}p^k(1-p)^{n-k},\qquad
+P(X=k)=e^{-\lambda}\frac{\lambda^k}{k!}
+\]
+
+\section{Unidad 6}
+\[
+f(x)=\frac{1}{\sigma\sqrt{2\pi}}\exp\Bigl(-\frac{(x-\mu)^2}{2\sigma^2}\Bigr),\qquad
+Z=\frac{X-\mu}{\sigma}
+\]
+
+\section{Unidad 7}
+\[
+\bar{x}\pm z_{\alpha/2}\frac{\sigma}{\sqrt{n}},\qquad
+\hat{p}\pm z_{\alpha/2}\sqrt{\frac{\hat{p}(1-\hat{p})}{n}}
+\]
+
+\section{Unidad 8}
+\[
+m_k=\frac{1}{n}\sum x_i^k,\qquad
+\hat{\theta}_{\mathrm{MV}}=\arg\max_\theta \prod_{i=1}^n f(x_i\mid\theta)
+\]
+
+\end{document}
