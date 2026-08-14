@@ -20,7 +20,7 @@ Las respuestas van **concretas** (planteo → fórmula → resultado → una int
 | Panel docente | **https://agente-estadistica-i.srv1825081.hstgr.cloud/docente** |
 | Salud Eve | `https://agente-estadistica-i.srv1825081.hstgr.cloud/eve/v1/health` → `{"ok":true,"status":"ready"}` |
 | Código GitHub | https://github.com/inteligenciamotivacional45-max/agente-estadistica-i (`main`) |
-| Rama de trabajo / PR | `cursor/aula-umss-google-c1ee` · https://github.com/inteligenciamotivacional45-max/agente-estadistica-i/pull/1 |
+| Rama de trabajo / PR | `cursor/solo-docente-titular-c1ee` (solo el titular entra como docente) |
 | VPS (checkout) | Misma línea que `main` tras el merge; carpeta `/docker/agente-estadistica-i` |
 | VPS Hostinger KVM 2 | `179.197.70.116` · Ubuntu 24.04 · hostname `srv1825081` |
 | App en el VPS | `/docker/agente-estadistica-i` (Docker + Traefik) |
@@ -33,7 +33,7 @@ Otras apps en el **mismo VPS** (no tocar sin pedir): n8n, AgendaPro, Quipu, conv
 
 ## Qué quedó hecho (ago 2026)
 
-1. **Login Google UMSS.** El enlace ya no es público. Estudiantes con `@est.umss.edu` (Google Workspace / Moodle). Microsoft `@ms.umss.edu` no entra. Docente: `TEACHER_EMAILS=d.delgadillo@umss.edu`.
+1. **Login Google UMSS.** El enlace ya no es público. Estudiantes con `@est.umss.edu` (Google Workspace / Moodle). Microsoft `@ms.umss.edu` no entra. Como docente solo entra **el titular** (`d.delgadillo@umss.edu`); otros `@umss.edu` / `@umss.edu.bo` no entran, aunque figuren en `ALLOWED_EMAIL_DOMAINS`.
 2. **Panel `/docente`.** Interruptor abrir/cerrar aula + aviso + lista de quienes ya entraron. SQLite en el volumen Docker (`aula.sqlite`).
 3. **Cerrar aula detiene el chat para todos**, incluido el docente. Eve rechaza turnos; la UI oculta el compositor y redirige a “El aula está cerrada”.
 4. **OAuth de Google** creado y cargado en el `.env` del VPS (`GOOGLE_CLIENT_ID` / `GOOGLE_CLIENT_SECRET`). Redirect: `https://agente-estadistica-i.srv1825081.hstgr.cloud/api/auth/callback/google`.
@@ -45,7 +45,7 @@ Otras apps en el **mismo VPS** (no tocar sin pedir): n8n, AgendaPro, Quipu, conv
 | Quién | Cómo |
 |---|---|
 | Estudiante | Google `@est.umss.edu`. Solo chatea si el aula está **abierta**. |
-| Docente | Google cuyo correo está en `TEACHER_EMAILS`. Abre/cierra en `/docente`. |
+| Docente | Solo el correo titular en `TEACHER_EMAILS` (uno). Abre/cierra en `/docente`. |
 | App Google | Si sigue en **Testing**, solo entran los *Test users*. Para el curso entero: publicar (Audience → In production). Ámbitos: email, profile, openid. |
 
 Aula **cerrada por defecto** hasta que el docente la abra.
@@ -53,7 +53,7 @@ Aula **cerrada por defecto** hasta que el docente la abra.
 ## Stack
 
 - **Eve** 0.37.0 + **Next.js** 16 (`withEve`)
-- **Auth.js** (next-auth v5) + Google. Dominios: `@est.umss.edu`, `@umss.edu.bo`, `@umss.edu` y subdominios
+- **Auth.js** (next-auth v5) + Google. Estudiantes: solo `@est.umss.edu`. Docente titular: el primer correo de `TEACHER_EMAILS` (en producción, `d.delgadillo@umss.edu`). Otros `@umss.edu.bo` / `@umss.edu` no entran.
 - Canal Eve: cookie de sesión, luego `vercelOidc()`, `localDev()`. **No hay `none()`**
 - Modelo: NexoRouter `https://api.nexorouter.com/v1`, `kimi-k2.6`
 - Tools: `descriptive_stats`, `frequency_distribution`, `linear_regression`, `probability`, `distributions`, `confidence_interval`, `course_formula`
@@ -84,6 +84,7 @@ Variables en `.env` del VPS (nombres; **valores nunca a Git**): `NEXOROUTER_API_
 - **NexoRouter** es el proveedor activo (Kimi oficial suspendido por saldo).
 - Hosting compartido Hostinger **no** sirve; el VPS KVM 2 sí.
 - Login: Google institucional, no contraseña ni Microsoft 365.
+- Ingreso docente: **solo** el primer correo de `TEACHER_EMAILS` (el titular). Otros docentes UMSS no entran.
 - Al cerrar el aula, **nadie** chatea (ni el docente). Reabrir en `/docente`.
 
 ## Problemas conocidos

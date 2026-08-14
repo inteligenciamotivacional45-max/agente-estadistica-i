@@ -1,7 +1,7 @@
 import NextAuth from "next-auth";
 import Google from "next-auth/providers/google";
 import { recordStudentVisit } from "@/agent/lib/aula";
-import { canSignIn, classroomRole, isTeacherEmail } from "@/agent/lib/umss";
+import { canSignIn, classroomRole, isOtherFacultyEmail, isTeacherEmail } from "@/agent/lib/umss";
 
 function googleClientId(): string | undefined {
   return process.env.AUTH_GOOGLE_ID ?? process.env.GOOGLE_CLIENT_ID;
@@ -46,7 +46,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       }
 
       if (!canSignIn(email)) {
-        return "/?error=dominio";
+        return isOtherFacultyEmail(email) ? "/?error=docente" : "/?error=dominio";
       }
 
       if (!isTeacherEmail(email)) {

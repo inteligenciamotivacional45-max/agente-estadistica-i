@@ -6,8 +6,8 @@ const ERROR_MESSAGES: Record<string, string> = {
     "Use su correo institucional UMSS de Google (@est.umss.edu). La cuenta Microsoft @ms.umss.edu no sirve para este ingreso.",
   unverified: "Verifique su correo de Google e intente de nuevo.",
   email: "Google no devolvió un correo. Elija otra cuenta institucional.",
-  AccessDenied:
-    "No se pudo entrar. Use el correo institucional UMSS de Google Workspace.",
+  docente:
+    "Este aula es del Docente Mgr Alfredo Delgadillo Cossio. Otros correos de docentes no entran. Si es estudiante, use @est.umss.edu.",
   Configuration: "El aula aún no tiene configurado el acceso con Google.",
   OAuthCallback: "Google rechazó el inicio de sesión. Intente otra vez.",
 };

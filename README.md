@@ -13,7 +13,7 @@ Las fórmulas se escriben en LaTeX y el chat las muestra con KaTeX.
 
 ## Docente
 
-En `/docente` puede abrir o cerrar el aula y dejar un aviso. Al **cerrar**, el chat se detiene para todos (estudiantes y docente). Su correo Google debe estar en `TEACHER_EMAILS`.
+En `/docente` puede abrir o cerrar el aula y dejar un aviso. Al **cerrar**, el chat se detiene para todos. Solo entra como docente **su** correo (`TEACHER_EMAILS`); otros docentes de la UMSS no tienen acceso.
 
 ## Desarrollo local
 
@@ -47,8 +47,8 @@ En [Google Cloud Console](https://console.cloud.google.com/) → APIs y servicio
 | `AUTH_SECRET` | Firma de la sesión (obligatorio en producción) |
 | `AUTH_URL` | URL pública del aula |
 | `GOOGLE_CLIENT_ID` / `GOOGLE_CLIENT_SECRET` | OAuth de Google (`AUTH_GOOGLE_ID` / `AUTH_GOOGLE_SECRET` también sirven) |
-| `TEACHER_EMAILS` | Correos Google del docente, separados por coma |
-| `ALLOWED_EMAIL_DOMAINS` | Por defecto `est.umss.edu,umss.edu.bo,umss.edu` |
+| `TEACHER_EMAILS` | Un solo correo Google del docente titular (si hay varios, solo cuenta el primero) |
+| `ALLOWED_EMAIL_DOMAINS` | Por defecto `est.umss.edu` (estudiantes). Otros docentes no entran. |
 | `AULA_DB_PATH` | SQLite del aula; por defecto `.eve/.workflow-data/aula.sqlite` |
 
 No subas `.env` ni `.env.local` a GitHub.

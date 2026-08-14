@@ -1,4 +1,4 @@
-const DEFAULT_ALLOWED_DOMAINS = ["est.umss.edu", "umss.edu.bo", "umss.edu"] as const;
+const DEFAULT_ALLOWED_DOMAINS = ["est.umss.edu"] as const;
 
 export type ClassroomRole = "teacher" | "student";
 
@@ -51,7 +51,8 @@ export function isUmssEmail(email: string, allowed = allowedEmailDomains()): boo
 }
 
 export function teacherEmails(value = process.env.TEACHER_EMAILS): string[] {
-  return parseEmailList(value);
+  const listed = parseEmailList(value);
+  return listed.slice(0, 1);
 }
 
 export function isTeacherEmail(email: string, teachers = teacherEmails()): boolean {
@@ -60,6 +61,36 @@ export function isTeacherEmail(email: string, teachers = teacherEmails()): boole
 
 export function classroomRole(email: string, teachers = teacherEmails()): ClassroomRole {
   return isTeacherEmail(email, teachers) ? "teacher" : "student";
+}
+
+function isStudentWorkspaceDomain(domain: string): boolean {
+  const host = domain.trim().toLowerCase();
+  return host === "est.umss.edu" || host.endsWith(".est.umss.edu");
+}
+
+function isUmssStaffDomain(domain: string): boolean {
+  const host = domain.trim().toLowerCase();
+  if (host.length === 0 || isStudentWorkspaceDomain(host)) {
+    return false;
+  }
+
+  return (
+    host === "umss.edu" ||
+    host === "umss.edu.bo" ||
+    host.endsWith(".umss.edu") ||
+    host.endsWith(".umss.edu.bo")
+  );
+}
+
+export function isOtherFacultyEmail(
+  email: string,
+  teachers = teacherEmails(),
+): boolean {
+  if (isTeacherEmail(email, teachers)) {
+    return false;
+  }
+
+  return isUmssStaffDomain(emailDomain(email));
 }
 
 export function canSignIn(
@@ -72,5 +103,14 @@ export function canSignIn(
     return false;
   }
 
-  return isTeacherEmail(email, teachers) || isUmssEmail(email, allowed);
+  if (isTeacherEmail(email, teachers)) {
+    return true;
+  }
+
+  // Other UMSS faculty never enter as students, even if their domain is listed.
+  if (isOtherFacultyEmail(email, teachers)) {
+    return false;
+  }
+
+  return isUmssEmail(email, allowed);
 }
