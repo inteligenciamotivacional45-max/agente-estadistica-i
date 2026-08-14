@@ -13,7 +13,7 @@ Las fórmulas se escriben en LaTeX y el chat las muestra con KaTeX.
 
 ## Docente
 
-En `/docente` puede abrir o cerrar el aula y dejar un aviso para los estudiantes. Su correo Google debe estar en `TEACHER_EMAILS` (puede ser Gmail personal o institucional).
+En `/docente` puede abrir o cerrar el aula y dejar un aviso. Al **cerrar**, el chat se detiene para todos (estudiantes y docente). Su correo Google debe estar en `TEACHER_EMAILS`.
 
 ## Desarrollo local
 
@@ -57,9 +57,10 @@ No subas `.env` ni `.env.local` a GitHub.
 
 ```bash
 cd /docker/agente-estadistica-i
-git pull
-# complete AUTH_* GOOGLE_* TEACHER_EMAILS en .env
+git fetch origin
+git checkout cursor/aula-umss-google-c1ee
+git pull origin cursor/aula-umss-google-c1ee
 docker compose up --build -d
 ```
 
-El volumen Docker `eve_workflow` guarda el estado del aula y los estudiantes junto a los datos de Eve.
+El VPS corre esa rama (el PR aún no está en `main`). El volumen Docker `eve_workflow` guarda el estado del aula y los estudiantes junto a los datos de Eve.
