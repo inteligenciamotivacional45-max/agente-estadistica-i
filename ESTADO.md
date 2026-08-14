@@ -20,7 +20,7 @@ Las respuestas van **concretas** (planteo → fórmula → resultado → una int
 | Panel docente | **https://agente-estadistica-i.srv1825081.hstgr.cloud/docente** |
 | Salud Eve | `https://agente-estadistica-i.srv1825081.hstgr.cloud/eve/v1/health` → `{"ok":true,"status":"ready"}` |
 | Código GitHub | https://github.com/inteligenciamotivacional45-max/agente-estadistica-i (`main`) |
-| Rama de trabajo / PR | `cursor/solo-docente-titular-c1ee` (solo el titular entra como docente) |
+| Rama de trabajo / PR | `cursor/solo-docente-titular-c1ee` · https://github.com/inteligenciamotivacional45-max/agente-estadistica-i/pull/2 |
 | VPS (checkout) | Misma línea que `main` tras el merge; carpeta `/docker/agente-estadistica-i` |
 | VPS Hostinger KVM 2 | `179.197.70.116` · Ubuntu 24.04 · hostname `srv1825081` |
 | App en el VPS | `/docker/agente-estadistica-i` (Docker + Traefik) |
@@ -33,7 +33,7 @@ Otras apps en el **mismo VPS** (no tocar sin pedir): n8n, AgendaPro, Quipu, conv
 
 ## Qué quedó hecho (ago 2026)
 
-1. **Login Google UMSS.** El enlace ya no es público. Estudiantes con `@est.umss.edu` (Google Workspace / Moodle). Microsoft `@ms.umss.edu` no entra. Como docente solo entra **el titular** (`d.delgadillo@umss.edu`); otros `@umss.edu` / `@umss.edu.bo` no entran, aunque figuren en `ALLOWED_EMAIL_DOMAINS`.
+1. **Login Google UMSS.** El enlace ya no es público. Estudiantes con `@est.umss.edu` (Google Workspace / Moodle). Microsoft `@ms.umss.edu` no entra. Como docente solo entra **el titular** (`d.delgadillo@umss.edu`); otros `@umss.edu` / `@umss.edu.bo` no entran, aunque figuren en `ALLOWED_EMAIL_DOMAINS`. En el VPS: `ALLOWED_EMAIL_DOMAINS=est.umss.edu`. Producción en `46c5ec9`.
 2. **Panel `/docente`.** Interruptor abrir/cerrar aula + aviso + lista de quienes ya entraron. SQLite en el volumen Docker (`aula.sqlite`).
 3. **Cerrar aula detiene el chat para todos**, incluido el docente. Eve rechaza turnos; la UI oculta el compositor y redirige a “El aula está cerrada”.
 4. **OAuth de Google** creado y cargado en el `.env` del VPS (`GOOGLE_CLIENT_ID` / `GOOGLE_CLIENT_SECRET`). Redirect: `https://agente-estadistica-i.srv1825081.hstgr.cloud/api/auth/callback/google`.
